@@ -2,6 +2,8 @@ const e = require('express')
 const homeM = require('../models/home.m')
 const db = require('../models/db');
 const PER_PAGE=6
+var jwt = require('jsonwebtoken');
+
 function formatURL(url) {
     if (url[0] == '/') url = url.slice(1, url.length)
     var lastIndexMark = url.lastIndexOf('?')
@@ -11,11 +13,11 @@ function formatURL(url) {
 }
 exports.home = async (req, res, next) => {
     try {
-        const cattgories = await homeM.getAllCatogories()
+        const catgories = await homeM.getAllCatogories()
         res.render('home/home', {
             title: 'Home',
-            categories: cattgories,
-            account: req.cookies ? jwt.decode(req.cookies.jwt).user : null
+            categories: catgories,
+            account: req.cookies ? jwt.decode(req.cookies.jwt).username : null
         })
     }
     catch (err) {
@@ -28,6 +30,8 @@ exports.getProductsPage = async (req, res, next) => {
         res.render('home/products', {
             title: 'Products',
             currentURL: formatURL(req.originalUrl),
+            account: req.cookies ? jwt.decode(req.cookies.jwt).username : null
+
         })
     }
     catch(err){

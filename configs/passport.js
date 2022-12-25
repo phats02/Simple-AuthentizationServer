@@ -3,6 +3,9 @@ const db = require("../models/db.js")
 var LocalStrategy = require('passport-local');
 var OAuth2Strategy = require('passport-oauth2')
 const bcrypt = require('bcrypt');
+var JwtStrategy = require('passport-jwt').Strategy
+var opts = require('./opts')
+
 module.exports = app => {
     app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 
@@ -40,4 +43,22 @@ module.exports = app => {
             }
         }
     ));
+    passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
+        try {
+            const user = await db.getOne("Users", "Username", jwt_payload.username)
+            if (user) return done(null, user);
+            else {
+                const maxID = await db.query(`select MAX("Customers"."CusID") as "maxID" from "Customers"`)
+                const data_cus={"CustomerName": jwt_payload.username,"Token":jwt_payload}
+                data_cus["CusID"] = (maxID[0]['maxID']) ? parseInt(maxID[0]['maxID']) + 1 : 1
+                await db.insert('Customers',data_cus)
+                return done(null, user)
+            }
+
+        }
+        catch (err) {
+            console.log(err)
+            return done(err, false)
+        }
+    }));
 }

@@ -9,6 +9,9 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const port = process.env.PORT_SHOP || 20157
+const passport = require("passport")
+const cookieParser = require("cookie-parser");
+
 require('./configs/passport.js')(app)
 const routerChat = require("./routers/chat.r")
 const routerUser=require('./routers/user.r')
@@ -23,8 +26,16 @@ app.set('view engine', 'hbs')
 app.use(express.static(__dirname + '/db/pid'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use('/home', routersHome)
-app.use('/chat', routerChat)
+
+app.use(cookieParser());
+
+
+app.use('/home',passport.authenticate('jwt', {
+    failureRedirect: '/login'
+}), routersHome)
+app.use('/chat',passport.authenticate('jwt', {
+    failureRedirect: '/login'
+}), routerChat)
 app.use('/', routerUser)
 
 app.use((err, req, res, next) => {

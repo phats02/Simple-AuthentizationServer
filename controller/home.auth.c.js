@@ -1,6 +1,8 @@
 const e = require('express')
 const homeM = require('../models/home.auth.m')
 var jwt = require('jsonwebtoken');
+const { as } = require('pg-promise');
+const { user } = require('../configs/cnStr');
 
 exports.login = async (req, res, next) => {
     res.render('auth/signin', {
@@ -24,7 +26,7 @@ exports.createACC = (req, res, next) => {
         else {
             req.login(req.body, function(err) {
                 if (err) { return next(err); }
-                res.redirect('/');
+                res.redirect('/home');
               });
         }
     })
@@ -67,10 +69,13 @@ exports.logout = (req, res, next) => {
     res.redirect('/login')
 }
 exports.sendAuth=async (req,res,next)=>{
-    console.log(req.session.passport.user)
     const user=await homeM.getInformationAccount(req.session.passport.user)
     let payload={'username':user.Username,'FullName':user.FullName,"Address":user.Address,"liveTime":req.body['live-time']}
     const token = jwt.sign(payload, process.env.SECRET_KEY)
-    console.log(token)
     res.redirect('http://localhost:20157/auth/callback?token='+token)   
+}
+exports.checkUserName=async(req,res,next)=>{
+    const username=req.query.username
+    const rs=await homeM.checkUsername(username)
+    res.json(rs)
 }

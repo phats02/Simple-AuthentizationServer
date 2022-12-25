@@ -20,4 +20,5 @@ router.get('/logout', function (req, res, next) {
     })
 })
 router.post('/confirm',homeC.sendAuth)
+router.get('/checkusername',homeC.checkUserName)
 module.exports = router
