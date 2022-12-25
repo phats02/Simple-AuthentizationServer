@@ -1,0 +1,24 @@
+{{#if success}}
+<div class="p-3 mb-2 bg-success text-white">Login successful</div>
+{{/if}}
+<h2 class="text-center">We will share the following information with the SHOP APP</h2>
+<div class="row mx-auto w-25">
+  <p class="col-6">Username:</p>
+  <p class="col-6">{{user.Username}}</p>
+  <p class="col-6">Fullname:</p>
+  <p class="col-6">{{user.FullName}}</p>
+  <p class="col-6">Address:</p>
+  <p class="col-6">{{user.Address}}</p>
+  <p class="col-6">Share with: </p>
+  <form action="/confirm" method="POST" class="col-4">
+  <select class="form-select form-select-sm" aria-label=".form-select-sm example" name="live-time">
+    <option value="1">1 hour</option>
+    <option value="2">2 hour</option>
+    <option value="24">24 hour</option>
+  </select>
+  <button type="submit" class="btn btn-outline-primary mt-5">Submit</button>
+  </form>
+</div>
+<script>
+  
+</script>

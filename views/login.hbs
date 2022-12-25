@@ -1,0 +1,38 @@
+{{#if error}}
+<div class="p-3 mb-2 bg-danger text-white">{{error}}</div>
+{{/if}}
+
+<div class="w-25 p-3 mx-auto border mt-4">
+            <a href="/auth2/local" class="btn btn-secondary"><i class="fa fa-facebook"></i>&nbsp; Login with local OAuth2</a>
+        </div>
+    </form>
+</div>
+<style>
+    .btn-google {
+        color: #545454;
+        background-color: #ffffff;
+        box-shadow: 0 1px 2px 1px #ddd;
+    }
+
+    .social-btn .btn-danger {
+        background: #df4930;
+    }
+
+    .social-btn .btn-secondary {
+        background: #507cc0;
+    }
+
+    .or-seperator {
+        margin-top: 20px;
+        text-align: center;
+        border-top: 1px solid #ccc;
+    }
+
+    .or-seperator i {
+        padding: 0 10px;
+        background:white;
+        position: relative;
+        top: -11px;
+        z-index: 1;
+    }
+</style>

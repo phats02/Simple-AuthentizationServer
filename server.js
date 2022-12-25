@@ -9,7 +9,9 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 const port = process.env.PORT_SHOP || 20157
+require('./configs/passport.js')(app)
 const routerChat = require("./routers/chat.r")
+const routerUser=require('./routers/user.r')
 
 app.engine('hbs', exphbs.engine({
     extname: 'hbs',
@@ -23,6 +25,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/home', routersHome)
 app.use('/chat', routerChat)
+app.use('/', routerUser)
 
 app.use((err, req, res, next) => {
     const status = err.status | 500
@@ -36,4 +39,4 @@ io.on('connection', (socket) => {
         io.emit('picture', pictureData.toString('base64'));
       });
 });
-server.listen(port, () => console.log(`Running app in port ${port}`))
+server.listen(port, () => console.log(`Running Shop app in port ${port}`))

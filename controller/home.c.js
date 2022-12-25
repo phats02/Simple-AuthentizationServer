@@ -1,6 +1,5 @@
 const e = require('express')
 const homeM = require('../models/home.m')
-var jwt = require('jsonwebtoken');
 const db = require('../models/db');
 const PER_PAGE=6
 function formatURL(url) {
