@@ -2,9 +2,9 @@ const express=require('express')
 const exphbs=require('express-handlebars')
 const routersHome=require("./routers/home.r")
 var session = require('cookie-session')
-
+require('dotenv').config()
 const app=express()
-const port=3000
+const port=process.env.PORT_SHOP || 20157
 
 app.engine('hbs',exphbs.engine({
     extname:'hbs',
