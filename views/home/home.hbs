@@ -11,9 +11,6 @@
             /* height: 200px; */
         }
     </style>
-{{#if noti}}
-  <div class="p-3 mb-2 bg-success text-white">{{noti}}</div>
-{{/if}}
 <div class="h1 text-center text-uppercase font-weight-bold">Danh Sách Category</div>
     <div class="container w-75 row mx-auto">
       {{#each categories}}
@@ -21,8 +18,4 @@
             <a href="/home/category/{{this.CategoryID}}"><div class="box shadow">{{this.CategoryName}}</div></a>
         </div>
       {{/each}}
-
-        <div class="p-3 col-4">
-            <a href="home/create"><div class="box shadow" style="background-image: linear-gradient(#c471ed,#f64f59);"><b>＋</b></div></a>
-        </div>
     </div>

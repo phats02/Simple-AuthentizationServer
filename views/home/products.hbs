@@ -1,0 +1,124 @@
+<style>
+    .title {
+        padding: 30px 0px;
+        text-align: center;
+        background-color: #5DA7DB;
+        font-size: 2em;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: white;
+    }
+</style>
+<div class="title">{{title}}</div>
+<div class="row mx-auto w-75" id="content">
+    {{#each products}}
+
+
+
+    {{else}}
+    <div class="p-3 mb-2 bg-danger text-white w-100 mt-3">Không có products nào</div>
+    {{/each}}
+
+</div>
+<ul class="pagination w-25 mx-auto">
+    <li class="page-item" id="Previous">
+        <a class="page-link" href="#" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+        </a>
+    </li>
+    <li class="page-item" id="Next">
+        <a class="page-link" href="#" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+        </a>
+    </li>
+</ul>
+</nav>
+<script>
+    async function GetSize(CategoryID) {
+        const rs = fetch(`/home/getsize/${CategoryID}`).then(async (response) => {
+            pageSize = await response.json();
+            pageSize = pageSize["size"]
+            return pageSize
+        })
+        return rs
+    }
+    async function GetProducts(CategoryID, page) {
+        const rs = fetch(`/home/getProducts/${CategoryID}?page=${page}`).then(async (response) => {
+            products = await response.json();
+            return products
+        })
+        return rs
+    }
+    function changeContent(products) {
+        let content = document.getElementById("content")
+        content.innerHTML = ""
+        for (const p of products) {
+            content.innerHTML += `<div class="p-3 col-4">
+        <div class="card" style="height: 150px;">
+            <div class="card-body">
+                <h5 class="card-title">${p.ProductName}</h5>
+                <div class="row ml-1">
+                    <p href="#" class="btn btn-light mr-2">🛒 ${p.UnitPrice}</p>
+                </div>
+            </div>
+        </div>
+    </div>`
+        }
+    }
+    window.onload = async (event) => {
+        let CategoryID = window.location.pathname.split('/')[3]
+        let pageSize = await GetSize(CategoryID)
+        pageSize = Math.ceil(pageSize / 6)
+        let currPage = 0
+        const Previous = document.getElementById("Previous")
+        const Next = document.getElementById("Next")
+        if (pageSize) {
+            if (currPage == 0) {
+                Previous.style.display = "none";
+            }
+            if (currPage >= pageSize - 1) {
+                Next.style.display = "none";
+            }
+            let products = await GetProducts(CategoryID, 0)
+            changeContent(products)
+        }
+        else if (pageSize != 0) {
+
+            alert('Fetch Error')
+        }
+        else {
+            if (currPage == 0) {
+                Previous.style.display = "none";
+            }
+            if (currPage >= pageSize - 1) {
+                Next.style.display = "none";
+            }
+        }
+
+        Previous.onclick = async (e) => {
+            e.preventDefault();
+            currPage -= 1
+            Next.style.display = "block";
+
+            if (currPage == 0) {
+                Previous.style.display = "none";
+            }
+            products = await GetProducts(CategoryID, currPage)
+            changeContent(products)
+        }
+        Next.onclick = async (e) => {
+            e.preventDefault();
+            currPage += 1
+            Previous.style.display = "block";
+            if (currPage == pageSize - 1) {
+                Next.style.display = "none";
+            }
+            products = await GetProducts(CategoryID, currPage)
+            changeContent(products)
+        }
+    };
+
+
+</script>
